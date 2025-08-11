@@ -1,7 +1,10 @@
 package api
 
 import (
+	"log"
 	"net/http"
+
+	"github.com/thecipherdev/goauth/controller"
 )
 
 type APIServer struct {
@@ -15,7 +18,14 @@ func NewAPIServer(addr string) *APIServer {
 }
 
 func (r *APIServer) Run() error {
-	router := http.NewServeMux()
+	mainRouter := http.NewServeMux()
 
-	return http.ListenAndServe(r.addr, router)
+	userRouter := http.NewServeMux()
+	userHandler := controller.NewUserHandler()
+	userHandler.UserRouter(userRouter)
+
+	mainRouter.Handle("/api/v1/", http.StripPrefix("/api/v1", userRouter))
+
+	log.Printf("Server is running on PORT: %v", r.addr)
+	return http.ListenAndServe(r.addr, mainRouter)
 }

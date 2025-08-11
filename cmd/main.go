@@ -1,13 +1,16 @@
 package main
 
 import (
-	"log"
-
+	"fmt"
 	"github.com/thecipherdev/goauth/cmd/api"
+	"github.com/thecipherdev/goauth/config"
+	"log"
 )
 
 func main() {
-	server := api.NewAPIServer(":8080")
+	cfg := config.Get()
+	PORT := fmt.Sprintf(":%v", cfg.Port)
+	server := api.NewAPIServer(PORT)
 
 	if err := server.Run(); err != nil {
 		log.Fatal(err)
