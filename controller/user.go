@@ -22,6 +22,9 @@ func NewUserHandler() *UserHandler {
 func (h *UserHandler) UserRouter(router *http.ServeMux) {
 	router.HandleFunc("POST /register", handleRegister)
 	router.HandleFunc("POST /login", handleLogin)
+	router.HandleFunc("GET /protected", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Protected granted access")
+	})
 }
 
 func handleLogin(w http.ResponseWriter, r *http.Request) {

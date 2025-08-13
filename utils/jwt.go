@@ -12,6 +12,7 @@ import (
 type CustomClaims struct {
 	Username  string `json:"username"`
 	TokenType string `json:"token_type"`
+	UserID    int    `json:"user_id"`
 	jwt.RegisteredClaims
 }
 
@@ -35,6 +36,7 @@ func GenerateToken(sub, username, tokenType string, duration time.Duration) (str
 	custom := &CustomClaims{
 		TokenType:        tokenType,
 		Username:         username,
+		UserID:           1,
 		RegisteredClaims: claims,
 	}
 

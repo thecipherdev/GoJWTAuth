@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/thecipherdev/goauth/controller"
+	"github.com/thecipherdev/goauth/middleware"
 )
 
 type APIServer struct {
@@ -26,6 +27,16 @@ func (r *APIServer) Run() error {
 
 	mainRouter.Handle("/api/v1/", http.StripPrefix("/api/v1", userRouter))
 
+	stack := middleware.CreateStack(
+		middleware.Logging,
+		middleware.IsAuthenticated,
+	)
+
+	server := http.Server{
+		Addr:    r.addr,
+		Handler: stack(mainRouter),
+	}
+
 	log.Printf("Server is running on PORT: %v", r.addr)
-	return http.ListenAndServe(r.addr, mainRouter)
+	return server.ListenAndServe()
 }
