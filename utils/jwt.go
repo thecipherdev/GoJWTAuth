@@ -60,6 +60,20 @@ func GenerateRefreshToken() (string, error) {
 	return GenerateToken("1231412312", "johndoe", "refresh", 7*24*time.Hour)
 }
 
+func ValidateRefreshToken(tokenStr string) (*CustomClaims, error) {
+	claims, err := ValidateToken(tokenStr)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if claims.TokenType != "refresh" {
+		return nil, errors.New("invalid token type for refresh")
+	}
+
+	return claims, nil
+}
+
 func ValidateToken(tokenStr string) (*CustomClaims, error) {
 	cfg := config.Get()
 	key := []byte(cfg.JWTSecret)
